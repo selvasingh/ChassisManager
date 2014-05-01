@@ -101,6 +101,10 @@ namespace Microsoft.GFS.WCS.ChassisManager.Ipmi
         {
             
             byte[] message = ipmiRequest.GetBytes(IpmiTransport.Wmi, 0x00);
+
+            // Create the response based on the provided type and message bytes.
+            ConstructorInfo constructorInfo = responseType.GetConstructor(Type.EmptyTypes);
+            IpmiResponse ipmiResponse = (IpmiResponse)constructorInfo.Invoke(new Object[0]);
             
             // Serialize the IPMI request into bytes.
             ManagementBaseObject ipmiRequestMessage = this.GetManagementObject(message);
@@ -119,45 +123,42 @@ namespace Microsoft.GFS.WCS.ChassisManager.Ipmi
 
             if (ipmiResponseMessage == null)
             {
-                // throw ipmi/dcmi response exception with a custom string message and the ipmi completion code
-                throw new IpmiResponseException();
-            }
-
-            // ipmi response completion code
-            byte completionCode = (byte)ipmiResponseMessage["CompletionCode"];
-           
-            // Create the response based on the provided type and message bytes.
-            ConstructorInfo constructorInfo = responseType.GetConstructor(Type.EmptyTypes);
-            IpmiResponse ipmiResponse = (IpmiResponse)constructorInfo.Invoke(new Object[0]);
-
-            if (completionCode == 0)
-            {
-                try
-                {
-                    // extract response data array
-                    byte[] responseData = (byte[])ipmiResponseMessage["ResponseData"];
-
-                    // extract response message lenght
-                    int lenght = (int)ipmiResponseMessage["ResponseDataSize"];                  
-
-                    // initialize the response to set the paramaters.
-                    ipmiResponse.Initialize(IpmiTransport.Wmi, responseData, lenght, 0x00);
-                    ipmiResponseMessage = null;
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine("Exception Source: {0} Message{1}", ex.Source.ToString(), ex.Message.ToString());
-                }
+                // Assume the request timed out.
+                ipmiResponse.CompletionCode = 0xA3;
             }
             else
             {
-                // throw ipmi/dcmi response exception with a custom string message and the ipmi completion code
-                Debug.WriteLine("Completion Code: " + IpmiSharedFunc.ByteToHexString(ipmiResponse.CompletionCode));
-                if (ipmiResponseMessage == null)
-                Debug.WriteLine("Request Type: {0} Response Packet: {1} Completion Code {2}", ipmiRequest.GetType().ToString(),            
-                    IpmiSharedFunc.ByteArrayToHexString((byte[])ipmiResponseMessage["ResponseData"]), IpmiSharedFunc.ByteToHexString(ipmiResponse.CompletionCode));
-            }
+                // ipmi response completion code
+                ipmiResponse.CompletionCode = (byte)ipmiResponseMessage["CompletionCode"];
 
+                if (ipmiResponse.CompletionCode == 0)
+                {
+                    try
+                    {
+                        // extract response data array
+                        byte[] responseData = (byte[])ipmiResponseMessage["ResponseData"];
+
+                        // extract response message lenght
+                        int lenght = (int)ipmiResponseMessage["ResponseDataSize"];
+
+                        // initialize the response to set the paramaters.
+                        ipmiResponse.Initialize(IpmiTransport.Wmi, responseData, lenght, 0x00);
+                        ipmiResponseMessage = null;
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("Exception Source: {0} Message{1}", ex.Source.ToString(), ex.Message.ToString());
+                    }
+                }
+                else
+                {
+                    // throw ipmi/dcmi response exception with a custom string message and the ipmi completion code
+                    Debug.WriteLine("Completion Code: " + IpmiSharedFunc.ByteToHexString(ipmiResponse.CompletionCode));
+                    if (ipmiResponseMessage == null)
+                        Debug.WriteLine("Request Type: {0} Response Packet: {1} Completion Code {2}", ipmiRequest.GetType().ToString(),
+                            IpmiSharedFunc.ByteArrayToHexString((byte[])ipmiResponseMessage["ResponseData"]), IpmiSharedFunc.ByteToHexString(ipmiResponse.CompletionCode));
+                }
+            }
             // Response to the IPMI request message.
             return ipmiResponse;
         }
