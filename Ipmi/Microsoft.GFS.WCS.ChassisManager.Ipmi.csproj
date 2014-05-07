@@ -64,6 +64,8 @@
     <Compile Include="Ipmi\Client\IpmiClientBase\IpmiClientExtended.cs" />
     <Compile Include="Ipmi\Client\IpmiClientResponse.cs" />
     <Compile Include="Ipmi\Client\EscapeCharactor.cs" />
+    <Compile Include="Ipmi\Client\IpmiSerialClient.cs" />
+    <Compile Include="Ipmi\Client\IpmiWmiClient.cs" />
     <Compile Include="Ipmi\Client\IpmiClientBase\IpmiClientBase.cs" />
     <Compile Include="Ipmi\IpmiCommand\Chassis\SetPowerCycleIntervalResponse.cs" />
     <Compile Include="Ipmi\IpmiCommand\Chassis\SetPowerCycleIntervalRequest.cs" />
