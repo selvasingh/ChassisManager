@@ -64,7 +64,7 @@ Stop service: net stop chassismanager
 
 ## Test Instructions
 
-WcsTestUtil can be used to validate the Chassis Manager through Ipmi protocol directly.
+WcsTestUtil can be used to validate the chassis through Ipmi protocol directly.
 
 To run the test, first build the WcsTestUtil solution following the BUILD steps as above.
 
