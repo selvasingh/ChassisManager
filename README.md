@@ -30,6 +30,8 @@ All new work should be in the development branch. Master is now reserved to tag 
 
 (iv) WcsCli -- This folder contains all source/related files for the framework that the Chassis Manager (CM) leverages to manage the rack level devices. Through this module, a CM provides the front end through the application interface (RESTful web API) for automated management and the command-line interface for manual management. It implements various commands required to manage all devices within the rack and to establish communication directly with the blade management system through a serial multiplexor.
 
+(v) Test -- This folder contaiks all source/related files for testing. For WcsTestUtil, it's a tool to validate chassis using Ipmi protocol.
+
 ## Prerequisites
 
 - .Net Framework 4.0 Full version
