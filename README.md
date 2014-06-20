@@ -30,6 +30,8 @@ All new work should be in the development branch. Master is now reserved to tag 
 
 (iv) WcsCli -- This folder contains all source/related files for the framework that the Chassis Manager (CM) leverages to manage the rack level devices. Through this module, a CM provides the front end through the application interface (RESTful web API) for automated management and the command-line interface for manual management. It implements various commands required to manage all devices within the rack and to establish communication directly with the blade management system through a serial multiplexor.
 
+(v) Test -- This folder contains all source/related files for testing. For WcsTestUtil, it's a tool used to validate chassis using Ipmi protocol.
+
 ## Prerequisites
 
 - .Net Framework 4.0 Full version
@@ -62,11 +64,20 @@ Stop service: net stop chassismanager
 
 ## Test Instructions
 
-We are working on providing a suite of packaged test cases soon.
+WcsTestUtil can be used to validate the chassis through Ipmi protocol directly.
 
+To run the test, first build the WcsTestUtil solution following the BUILD steps as above.
 
+Open a command prompt window and run the test application under the 'bin' folder.
 
+Here are some examples:
 
+WcsTestUtil.exe /Conn:IB /Cmd:A /Pass:1
 
+WcsTestUtil.exe /Conn:OOB /Com:1 /Cmd:A /Pass:1
 
+WcsTestUtil.exe /Conn:OOB /Com:1 /Type:JBOD /Cmd:A /Pass:1
 
+To get more detailed help on the test tool, please run:
+
+WcsTestUtil.exe /Help
