@@ -10,7 +10,6 @@ If your goal is to improve or extend the code and contribute back to this projec
 
 All new work should be in the development branch. Master is now reserved to tag builds.
 
-
 ## Quick Start
 
 - Clone the repo: git clone https://github.com/MSOpenTech/MCS-ChassisManager.git
